@@ -77,6 +77,13 @@
   (let [m ^Model (:liblinear-model model)]
     (Linear/predict m (feature-array (.getBias m) (:dimensions model) x))))
 
+(defn predictProbability [model x]
+  (let [m ^Model (:liblinear-model model)
+        f (feature-array (.getBias m) (:dimensions model) x)
+        a (double-array (.getNrClass m))]
+    {:label (Linear/predictProbability m f a)
+     :prob_estimates a}))
+
 (defn save-model
   "Writes the model out to two files specified by the base-file-name which should be a path and base file name. The extention .bin is added to the serialized java model and .edn is added to the clojure dimensions data."
   [model base-file-name]
